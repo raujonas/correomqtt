@@ -18,6 +18,10 @@
             <plugin name="SysTopicPlugin"/>
         </MainToolbarHook>
 
+        <ToolsMenuHook>
+            <plugin name="local-broker-plugin"/>
+        </ToolsMenuHook>
+
     </lists>
 
     <tasks>

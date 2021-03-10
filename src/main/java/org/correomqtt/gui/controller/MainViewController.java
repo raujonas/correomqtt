@@ -22,6 +22,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import org.correomqtt.plugin.manager.PluginManager;
+import org.correomqtt.plugin.spi.MainToolbarHook;
+import org.correomqtt.plugin.spi.ToolsMenuHook;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +77,7 @@ public class MainViewController implements ConnectionOnboardingDelegate, Connect
 
     private SelectionModel<Tab> selectionModel;
     private ResourceBundle resources;
+    private final PluginManager pluginSystem = PluginManager.getInstance();
 
     public MainViewController() {
         ConfigDispatcher.getInstance().addObserver(this);
@@ -104,6 +108,11 @@ public class MainViewController implements ConnectionOnboardingDelegate, Connect
         });
 
         tabPane.widthProperty().addListener((a, b, c) -> calcTabWidth());
+
+        int indexToInsert = toolsMenu.getItems().size();
+        pluginSystem.getExtensions(ToolsMenuHook.class).forEach(p -> {
+            p.onInstantiateToolsMenu(toolsMenu, indexToInsert);
+        });
     }
 
     private void setupAddTab() {
